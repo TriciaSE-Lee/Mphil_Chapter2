@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sed cheat sheet</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+  td code { white-space: nowrap; }
+</style>
+</head>
+<body>
+<main>
+<header class="lesson-header">
+  <p class="lesson-kicker">Reference</p>
+  <h1>sed cheat sheet</h1>
+  <p class="footnote">Grows as new lessons introduce new sed features. Currently covers: Lesson 1 (literal find-and-replace).</p>
+</header>
+
+<h2>The one command that matters most: <code>s</code></h2>
+<pre><code>sed 's/PATTERN/REPLACEMENT/FLAGS' file.txt</code></pre>
+<p>Reads the input line by line. On each line, if <code>PATTERN</code> matches, replace it with <code>REPLACEMENT</code>. Nothing is written back to the file unless you tell it to (<code>-i</code>, below) — by default the result just prints to your terminal.</p>
+
+<h2>Delimiter</h2>
+<p><code>/</code> is the conventional delimiter, but <em>any</em> character right after <code>s</code> works. Useful when your pattern itself contains <code>/</code> (e.g. file paths):</p>
+<pre><code>sed 's/plasmid_//'        <span class="sidenote"># delimiter is /</span>
+sed 's#/data/raw#/data/clean#'   <span class="sidenote"># delimiter is # instead, since the pattern has slashes</span></code></pre>
+
+<h2>Flags</h2>
+<table>
+<tr><th>Flag</th><th>Effect</th></tr>
+<tr><td><code>g</code></td><td>Replace <em>every</em> match on the line, not just the first.</td></tr>
+<tr><td><code>i</code> or <code>I</code></td><td>Case-insensitive match.</td></tr>
+<tr><td>(none)</td><td>Replace only the first match on each line.</td></tr>
+</table>
+
+<h2>Command-line options</h2>
+<table>
+<tr><th>Option</th><th>Effect</th></tr>
+<tr><td><code>-i</code></td><td>Edit the file <strong>in place</strong> instead of printing to stdout. No undo — see warning below.</td></tr>
+<tr><td><code>-i.bak</code></td><td>Edit in place, but first save the original as <code>file.bak</code>. Cheap insurance.</td></tr>
+<tr><td><code>-E</code></td><td>Extended regex mode. Not needed for literal find-and-replace, but this workspace uses it consistently once regex metacharacters show up, so <code>+</code>/<code>?</code>/<code>()</code> don't need backslashes.</td></tr>
+</table>
+
+<div class="callout">
+  <div class="callout-title">Habit</div>
+  Run the command <em>without</em> <code>-i</code> first and read the output. Only add <code>-i</code> once you've confirmed it does what you expect. On macOS, <code>-i</code> requires an argument even if empty: <code>sed -i '' 's/.../.../ ' file</code> — on Linux, <code>sed -i 's/.../.../ ' file</code> works with no argument.
+</div>
+
+<h2>Renaming files with sed + a loop</h2>
+<p><code>sed</code> edits text, not filenames directly — but combined with a bash loop, it drives batch renames:</p>
+<pre><code>for f in plasmid_*.fasta; do
+  mv "$f" "$(echo "$f" | sed 's/plasmid_//')"
+done</code></pre>
+
+<nav class="lesson-links">
+  <a href="../lessons/0001-sed-literal-find-replace.html">&larr; Lesson 1: literal find-and-replace</a>
+  <a href="../MISSION.md">Mission</a>
+</nav>
+</main>
+</body>
+</html>
