@@ -1,0 +1,283 @@
+/* Shared stylesheet for the awk/sed/regex teaching workspace.
+   Tufte-influenced: generous margins, serif body, restrained color, prints cleanly. */
+
+:root {
+  --ink: #1a1a1a;
+  --paper: #fdfcf9;
+  --rule: #d8d3c4;
+  --accent: #8a3324;
+  --accent-soft: #f4e9e3;
+  --code-bg: #f2f0e8;
+  --muted: #6b6558;
+  --good: #2f6b3a;
+  --bad: #a13a2c;
+  --max-width: 40rem;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  padding: 3rem 1.5rem 6rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+header.lesson-header {
+  max-width: var(--max-width);
+  margin: 0 auto 2.5rem;
+  border-bottom: 2px solid var(--rule);
+  padding-bottom: 1rem;
+}
+
+.lesson-kicker {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.4rem;
+}
+
+h1 {
+  font-size: 1.9rem;
+  line-height: 1.25;
+  margin: 0 0 0.3rem;
+}
+
+h2 {
+  font-size: 1.3rem;
+  margin-top: 2.4rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.25rem;
+}
+
+h3 {
+  font-size: 1.05rem;
+  margin-top: 1.6rem;
+}
+
+p, li { max-width: 100%; }
+
+a { color: var(--accent); text-decoration-thickness: 1px; }
+a:hover { text-decoration-style: wavy; }
+
+code, pre, .cmd {
+  font-family: "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+  font-size: 0.92rem;
+}
+
+code {
+  background: var(--code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+pre {
+  background: var(--code-bg);
+  padding: 0.9rem 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  border-left: 3px solid var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+blockquote {
+  margin: 1.2rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--rule);
+  color: var(--muted);
+  font-style: italic;
+}
+
+.callout {
+  background: var(--accent-soft);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.callout-title {
+  font-weight: bold;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+.primary-source {
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin: 1.8rem 0;
+}
+
+.primary-source .label {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.footnote, .sidenote {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+hr.rule {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 2.5rem 0;
+}
+
+nav.lesson-links {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+footer.lesson-footer {
+  max-width: var(--max-width);
+  margin: 3rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--rule);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* --- Playground / exercise widgets --- */
+
+.playground {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.playground textarea, .playground input[type="text"] {
+  width: 100%;
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  background: var(--code-bg);
+  color: var(--ink);
+}
+
+.playground textarea { resize: vertical; }
+
+.playground label {
+  display: block;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0.8rem 0 0.3rem;
+}
+
+button.run-btn {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.1rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+button.run-btn:hover { opacity: 0.9; }
+
+.result-box {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+}
+
+.result-box.neutral { background: var(--code-bg); }
+.result-box.good { background: #e7f0e6; color: var(--good); }
+.result-box.bad { background: #f6e6e2; color: var(--bad); }
+
+/* --- Quiz widget --- */
+
+.quiz {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1.2rem 1.2rem 1.4rem;
+  margin: 1.5rem 0;
+}
+
+.quiz .quiz-prompt {
+  font-weight: bold;
+  margin-bottom: 0.8rem;
+}
+
+.quiz .quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.quiz button.quiz-choice {
+  text-align: left;
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.9rem;
+  background: var(--code-bg);
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  padding: 0.55rem 0.8rem;
+  cursor: pointer;
+}
+
+.quiz button.quiz-choice:hover { border-color: var(--accent); }
+
+.quiz button.quiz-choice.correct { background: #e7f0e6; border-color: var(--good); }
+.quiz button.quiz-choice.incorrect { background: #f6e6e2; border-color: var(--bad); }
+
+.quiz .quiz-feedback {
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  display: none;
+}
+
+.quiz .quiz-feedback.shown { display: block; }
+
+@media print {
+  body { padding: 0; background: #fff; }
+  .playground, .quiz { border: 1px solid #999; }
+  button.run-btn, .quiz button.quiz-choice { display: none; }
+  nav.lesson-links { display: none; }
+}
+
+@media (max-width: 600px) {
+  body { font-size: 1rem; padding: 2rem 1rem 4rem; }
+  h1 { font-size: 1.5rem; }
+}
