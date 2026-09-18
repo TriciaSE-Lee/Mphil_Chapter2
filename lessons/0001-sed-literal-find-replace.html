@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 1: sed's s/// — find and replace, literally</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<main>
+
+<header class="lesson-header">
+  <p class="lesson-kicker">Lesson 1 &middot; sed</p>
+  <h1>sed's <code>s///</code>: find-and-replace, literally</h1>
+  <p class="footnote">Tied to <a href="../MISSION.md">the mission</a>: batch-renaming files and cleaning up text from the IncX3 work without touching each one by hand.</p>
+</header>
+
+<p>
+You've got a folder of downloaded assembly files, all named things like <code>plasmid_pEC14.fasta</code>,
+<code>plasmid_pIncX-SVH.fasta</code>, <code>plasmid_pOLA52.fasta</code> — and you want the
+<code>plasmid_</code> prefix gone from every single one. Renaming forty files by hand is exactly
+the kind of task that should never take more than one line.
+</p>
+
+<h2>What <code>sed</code> actually does</h2>
+<p>
+<code>sed</code> stands for <strong>s</strong>tream <strong>ed</strong>itor. It reads text one line
+at a time and applies an editing command to each line. The command you'll use almost constantly is
+<code>s</code> (substitute):
+</p>
+<pre><code>sed 's/PATTERN/REPLACEMENT/FLAGS'</code></pre>
+<p>
+Read it as: <em>on this line, find <code>PATTERN</code>, replace it with <code>REPLACEMENT</code></em>.
+For now, <code>PATTERN</code> is just literal text — no special characters yet. A literal string is
+already a perfectly valid pattern; the regex metacharacters (<code>.</code>, <code>*</code>, <code>[...]</code>,
+and friends) that make patterns more powerful are next lesson's problem, not this one's.
+</p>
+
+<div class="callout">
+  <div class="callout-title">Two flags you need on day one</div>
+  <ul>
+    <li>No flag &rarr; only the <strong>first</strong> match on each line is replaced.</li>
+    <li><code>g</code> &rarr; <strong>every</strong> match on each line is replaced.</li>
+  </ul>
+  <p style="margin-bottom:0">
+    <code>plasmid_pEC14.fasta</code> only has one <code>plasmid_</code>, so it doesn't matter here —
+    but it will matter later today.
+  </p>
+</div>
+
+<div class="primary-source">
+  <div class="label">Primary source — read this properly, not just this lesson</div>
+  <p><a href="https://www.grymoire.com/Unix/Sed.html">The Grymoire: Sed — An Introduction and Tutorial</a> by Bruce Barnett.
+  Widely considered the best plain-English <code>sed</code> tutorial online. Read at least the section on the
+  <code>s</code> command before the next session.</p>
+  <p style="margin-bottom:0">Bioinformatics-flavoured alternative, if you'd rather see genomics examples straight away:
+  <a href="https://datacarpentry.github.io/shell-genomics/">Data Carpentry: Introduction to the Command Line for Genomics</a>.</p>
+</div>
+
+<h2>Try it: strip the prefix</h2>
+<p>Type a <code>sed</code> command into the box below and hit Run. Get the output to match what's described, then move on.</p>
+
+<div class="playground" data-sed-playground>
+  <p style="margin-top:0"><strong>Goal:</strong> remove the <code>plasmid_</code> prefix from every filename below.</p>
+  <script type="application/json">
+  {
+    "input": "plasmid_pEC14.fasta\nplasmid_pIncX-SVH.fasta\nplasmid_pOLA52.fasta",
+    "placeholder": "s/plasmid_//",
+    "target": "pEC14.fasta\npIncX-SVH.fasta\npOLA52.fasta"
+  }
+  </script>
+</div>
+
+<p>
+Once that command does what you want, the actual renaming is one small step further — pipe each filename
+through the same <code>sed</code> command inside a loop:
+</p>
+<pre><code>for f in plasmid_*.fasta; do
+  mv "$f" "$(echo "$f" | sed 's/plasmid_//')"
+done</code></pre>
+<p class="footnote">
+This is exactly why literal <code>sed</code> substitution is worth learning on its own, before any regex
+metacharacters: most of your day-to-day renaming needs nothing fancier than this.
+</p>
+
+<h2>Now try the <code>g</code> flag</h2>
+<p>
+A FASTA header downloaded straight off ATB might look like this, underscores and all:
+</p>
+<pre><code>&gt;SAMN12345678_Escherichia_coli_IncX3_plasmid</code></pre>
+<p>You want every underscore turned into a space — not just the first one.</p>
+
+<div class="playground" data-sed-playground>
+  <p style="margin-top:0"><strong>Goal:</strong> replace <em>every</em> underscore with a space.</p>
+  <script type="application/json">
+  {
+    "input": ">SAMN12345678_Escherichia_coli_IncX3_plasmid",
+    "placeholder": "s/_/ /",
+    "target": ">SAMN12345678 Escherichia coli IncX3 plasmid"
+  }
+  </script>
+</div>
+
+<div class="callout">
+  <div class="callout-title">Habit worth building now</div>
+  Run your <code>sed</code> command without <code>-i</code> first and read the output before you trust it
+  near real files. Only add <code>-i</code> (edit the file in place) once you've confirmed the command does
+  exactly what you expect — there's no undo. Details in the
+  <a href="../reference/sed-cheatsheet.html">sed cheat sheet</a>.
+</div>
+
+<h2>Check your understanding</h2>
+
+<div class="quiz" data-quiz>
+  <script type="application/json">
+  {
+    "prompt": "You want to change every underscore to a space, everywhere on the line. Which command does that?",
+    "choices": ["sed 's/_/ /g'", "sed 's/ /_/g'", "sed 's/_/ /1'", "awk 's/_/ /g'"],
+    "correct": 0,
+    "explain": "The g flag tells sed to replace every match on the line, not just the first. Swapping the pattern and replacement does the opposite substitution; '1' isn't a valid flag for \"first occurrence\" (that's just the default, no flag needed); and awk doesn't use sed's s/// syntax directly."
+  }
+  </script>
+</div>
+
+<div class="quiz" data-quiz>
+  <script type="application/json">
+  {
+    "prompt": "Which of these will edit hello.txt in place, permanently changing the file on disk?",
+    "choices": ["sed -i 's/a/b/' hello.txt", "sed -n 's/a/b/' hello.txt", "sed -e 's/a/b/' hello.txt", "sed -a 's/a/b/' hello.txt"],
+    "correct": 0,
+    "explain": "-i writes the result back into the file. -n suppresses sed's automatic printing (used together with the p command, not covered yet). -e just marks what follows as a sed expression — harmless but doesn't cause in-place editing on its own. -a isn't a real sed flag.",
+    "note": "distractor -a is intentionally not a real flag"
+  }
+  </script>
+</div>
+
+<div class="callout">
+  <div class="callout-title">Stuck, or want to go further right now?</div>
+  This is a teaching session, not a static document — ask me follow-up questions directly. "What if the
+  filename has spaces in it?", "why did my command do nothing?", "can I chain two <code>sed</code> commands?"
+  are all fair game right now, not just next lesson.
+</div>
+
+<hr class="rule">
+
+<p class="footnote">
+<strong>Next up:</strong> regex metacharacters (<code>.</code>, <code>*</code>, <code>[...]</code>, anchors)
+via <code>grep -E</code>, so you can match <em>patterns</em> instead of only literal text — the step that
+gets you from "strip a known prefix" to "pull the accession number out of any ATB filename."
+</p>
+
+<footer class="lesson-footer">
+  <nav class="lesson-links">
+    <a href="../MISSION.md">&larr; Mission</a>
+    <a href="../reference/sed-cheatsheet.html">sed cheat sheet &rarr;</a>
+    <a href="../RESOURCES.md">Resources &rarr;</a>
+  </nav>
+</footer>
+
+</main>
+
+<script src="../assets/quiz.js"></script>
+<script src="../assets/sed-sim.js"></script>
+</body>
+</html>
