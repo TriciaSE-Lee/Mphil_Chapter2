@@ -9,8 +9,11 @@
     - Used the refseq lexicmap query unique `incx3_pir_refseq_results_unique.tsv`
     - Stripped GCF/GCA and sorted and kept unique numerals along with query identity. 
     - Resorted `GCF_priority_output.tsv` and `GCA_priority_output.tsv` by **pident**
-2. `genbank_grep.tsv` =  file containing the columns of interest from the grep of the genbank metadata txt file. This file has gone through the manual curation of accessions that returned NA for bioproject - it is the final list for genbank.   
-3. `genbank_grep_cleaned.tsv` = file containing the columns: query, sgenome, bioproject, biosample, organism_name, assembly_level, seq_rel_date, sgenome_no_version
+2. `genbank_grep.tsv` =  file containing the columns of interest from the grep of the genbank metadata txt file. This file has gone through the manual curation of accessions that returned NA for bioproject - it is the final list for genbank. 
+    - To note: There are <mark>duplicates</mark> from the double hits with query
+    - There are also duplicates in terms of biosamples with single biosamples having multiple assembly accessions (need to deduplicate based on several things - assembly level, sequencing read type (LR v SR), completeness - maybe?)
+3. `genbank_grep_dedup.tsv` = Final list that contains the unique biosamples that are filtered and kept based on listing order - of assembly quality (assembly_level, read_type= Hybrid v LR v SR, smaller contig numbers then largest N50 if needed to break any more ties.)
+
 
 
 
